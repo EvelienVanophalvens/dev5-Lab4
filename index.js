@@ -17,12 +17,24 @@ app.get('/api/v1/messages', (req, res) => {
                 "message": "Hello"
             },
             {
-                "user": 2,
+                "user": "Jane",
                 "message": "Hi"
             }
         ]
     })
 })
+
+app.post('/api/v1/messages', (req, res) => {
+    res.json({
+        "status": "success",
+        "message": "POSTING a new message for user John",
+        "data": {
+            "user": "John",
+            "message": "How are you?"
+        }
+    })
+})
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
