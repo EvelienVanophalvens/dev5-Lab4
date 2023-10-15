@@ -24,6 +24,17 @@ app.get('/api/v1/messages', (req, res) => {
     })
 })
 
+app.get('/api/v1/messages/:id', (req, res) => {
+    res.json({
+        "status": "success",
+        "message": "GETTING a message id 1",
+        "data": {
+            "user": "John",
+            "message": "Hello"
+        }
+    })
+})
+
 app.post('/api/v1/messages', (req, res) => {
     res.json({
         "status": "success",
