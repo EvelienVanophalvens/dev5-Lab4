@@ -46,6 +46,17 @@ app.post('/api/v1/messages', (req, res) => {
     })
 })
 
+app.put('/api/v1/messages/:id', (req, res) => {
+    res.json({
+        "status": "success",
+        "message": "UPDATING a message id 1",
+        "data": {
+            "user": "John",
+            "message": "Hello"
+        }
+    })
+})
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
