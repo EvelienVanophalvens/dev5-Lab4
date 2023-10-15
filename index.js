@@ -64,6 +64,17 @@ app.delete('/api/v1/messages/:id', (req, res) => {
     })
 })
 
+app.get('/api/v1/:username', (req, res) => {
+    res.json({
+        "status": "success",
+        "message": "GETTING message for username John",
+        "data": {
+            "user": "John",
+            "message": "How are you?"
+        }
+    })
+})
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
