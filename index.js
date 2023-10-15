@@ -13,12 +13,12 @@ app.get('/api/v1/messages', (req, res) => {
         "message": "GETTING messages",
         "data": [
             {
-                "id": 1,
-                "text": "Hello World"
+                "user": "John",
+                "message": "Hello"
             },
             {
-                "id": 2,
-                "text": "Bye World"
+                "user": 2,
+                "message": "Hi"
             }
         ]
     })
