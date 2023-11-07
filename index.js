@@ -130,10 +130,31 @@ app.put('/api/v1/messages/:id', async (req, res) => {
 })
 
 app.delete('/api/v1/messages/:id', (req, res) => {
+  id = req.params.id;
+  try{
+    const deleteMessage = Message.findByIdAndDelete(id);
+
+    if (!deleteMessage) {
+      // Als het bericht niet wordt gevonden, stuur een foutreactie met status 404
+      return res.json({
+        status: 'error',
+        message: `Could not find message with id: ${id} `,
+      });
+    }
+
     res.json({
-        "status": "success",
-        "message": "DELETING a message id 1"
-    })
+      status: "success",
+      message: "DELETING a message id 1"
+  })
+} catch(err) {
+  res.status(500).json({
+    status: "error",
+    message: "Failed to delete message",
+  });
+
+}
+
+
 })
 
 app.get('/api/v1/messages?user="username"', (req, res) => {
