@@ -1,10 +1,34 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const app = express();
+const port = 3000;
 
 //cors allow all
 const cors = require('cors');
 app.use(cors());
+
+//env
+require('dotenv').config();
+
+//moogoose connection
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB);
+
+
+
+
+const messageSchema = new mongoose.Schema(
+    {
+      user: String,
+      text: String,
+    },
+    {
+      collection: "messages",
+    }
+  );
+
+const Message = mongoose.model("Message", messageSchema);
+
+app.use(express.json());
 
 
 app.get('/api/v1/messages', (req, res) => {
@@ -24,6 +48,8 @@ app.get('/api/v1/messages', (req, res) => {
     })
 })
 
+
+
 app.get('/api/v1/messages/:id', (req, res) => {
     res.json({
         "status": "success",
@@ -35,16 +61,32 @@ app.get('/api/v1/messages/:id', (req, res) => {
     })
 })
 
-app.post('/api/v1/messages', (req, res) => {
-    res.json({
-        "status": "success",
-        "message": "POSTING a new message for user John",
-        "data": {
-            "user": "John",
-            "message": "How are you?"
-        }
-    })
-})
+app.post("/api/v1/messages", async (req, res) => {
+
+    const { user, text } = req.body.message;
+  
+    const newMessage = new Message({
+      user,
+      text
+    });
+
+    try {
+      const message = await newMessage.save();
+      res.json({
+        status: "success",
+        message: `POSTING a new message for user ${user}`,
+        data: {
+          message,
+        },
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: "error",
+        message: "Failed to save message",
+      });
+    }
+  });
+  
 
 app.put('/api/v1/messages/:id', (req, res) => {
     res.json({
@@ -64,7 +106,7 @@ app.delete('/api/v1/messages/:id', (req, res) => {
     })
 })
 
-app.get('/api/v1/:username', (req, res) => {
+app.get('/api/v1/messages?user="username"', (req, res) => {
     res.json({
         "status": "success",
         "message": "GETTING message for username John",
@@ -79,3 +121,4 @@ app.get('/api/v1/:username', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
+
