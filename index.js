@@ -32,7 +32,9 @@ app.use(express.json());
 
 
 app.get('/api/v1/messages', async (req, res)  => {
+  
   const messages = await Message.find();
+
     res.json({
         status: "success",
         message: "GETTING messages",
@@ -44,13 +46,23 @@ app.get('/api/v1/messages', async (req, res)  => {
 
 
 
-app.get('/api/v1/messages/:id', (req, res) => {
+app.get('/api/v1/messages/:id', async (req, res) => {
+  const id = req.params.id;
+  const message = await Message.findById(id);
+
+  if (!message) {
+    // Als het bericht niet wordt gevonden, stuur een foutreactie met status 404
+    return res.json({
+      status: 'error',
+      message: `Could not find message with id: ${id} `,
+    });
+  }
+
     res.json({
-        "status": "success",
-        "message": "GETTING a message id 1",
-        "data": {
-            "user": "John",
-            "message": "Hello"
+        status: "success",
+        message: "GETTING a message id 1",
+        data: {
+            message
         }
     })
 })
