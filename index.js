@@ -31,19 +31,13 @@ const Message = mongoose.model("Message", messageSchema);
 app.use(express.json());
 
 
-app.get('/api/v1/messages', (req, res) => {
+app.get('/api/v1/messages', async (req, res)  => {
+  const messages = await Message.find();
     res.json({
-        "status": "success",
-        "message": "GETTING messages",
-        "data": [
-            {
-                "user": "John",
-                "message": "Hello"
-            },
-            {
-                "user": "Jane",
-                "message": "Hi"
-            }
+        status: "success",
+        message: "GETTING messages",
+        data: [
+            messages
         ]
     })
 })
