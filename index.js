@@ -94,15 +94,39 @@ app.post("/api/v1/messages", async (req, res) => {
   });
   
 
-app.put('/api/v1/messages/:id', (req, res) => {
+app.put('/api/v1/messages/:id', async (req, res) => {
+  const id = req.params.id;
+  const { user, text } = req.body.message;
+  
+  //update message in database with new data
+  try{
+    const updateMessage = await Message.findByIdAndUpdate(id, {user, text}, {new: true});
+
+    if (!updateMessage) {
+      // Als het bericht niet wordt gevonden, stuur een foutreactie met status 404
+      return res.json({
+        status: 'error',
+        message: `Could not find message with id: ${id} `,
+      });
+    }
+  
     res.json({
-        "status": "success",
-        "message": "UPDATING a message id 1",
-        "data": {
-            "user": "John",
-            "message": "Hello"
+        status: "success",
+        message: "UPDATING a message id 1",
+        data: {
+          message: updateMessage
         }
     })
+  } catch(err) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to update message",
+    });
+    
+  }
+
+
+    
 })
 
 app.delete('/api/v1/messages/:id', (req, res) => {
