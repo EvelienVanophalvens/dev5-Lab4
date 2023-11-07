@@ -130,7 +130,7 @@ app.put('/api/v1/messages/:id', async (req, res) => {
 })
 
 app.delete('/api/v1/messages/:id', (req, res) => {
-  id = req.params.id;
+  const id = req.params.id;
   try{
     const deleteMessage = Message.findByIdAndDelete(id);
 
@@ -158,18 +158,39 @@ app.delete('/api/v1/messages/:id', (req, res) => {
 })
 
 app.get('/api/v1/messages?user="username"', (req, res) => {
+  const user = req.query.user;
+
+  try{
+    const messages = Message.find({user: user});
+
+    if (!messages) {
+      // Als het bericht niet wordt gevonden, stuur een foutreactie met status 404
+      return res.json({
+        status: 'error',
+        message: `Could not find message with user: ${user} `,
+      });
+    }
+
     res.json({
-        "status": "success",
-        "message": "GETTING message for username John",
-        "data": {
-            "user": "John",
-            "message": "How are you?"
-        }
-    })
+      status: "success",
+      message: `GETTING message for username ${user}`,
+      data: {
+        messages
+      }
+  })
+  }
+
+  catch(err) {
+    res.status(500).json({
+      status: "error",
+      message: "Failed to get message",
+    });
+    
+  }
+
 })
 
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
-
